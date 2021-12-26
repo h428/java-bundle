@@ -1,5 +1,6 @@
 package com.hao.bundle.demo.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Builder
 @ToString
 @Entity
-@Table(name = "user")
+@Table
 @DynamicInsert
 @DynamicUpdate
 public class User {
@@ -52,7 +53,7 @@ public class User {
 
     private Integer score;
 
-    private Date birthday;
+    private LocalDate birthday;
 
     @Column(name = "create_time")
     private LocalDateTime createTime;

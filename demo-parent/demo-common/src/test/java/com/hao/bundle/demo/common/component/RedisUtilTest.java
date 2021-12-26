@@ -1,7 +1,7 @@
 package com.hao.bundle.demo.common.component;
 
 import com.hao.bundle.demo.BaseTest;
-import com.hao.bundle.demo.common.pojo.dto.Foo;
+import com.hao.bundle.demo.pojo.dto.Foo;
 import com.hao.bundle.demo.common.util.EntityUtil;
 import com.hao.bundle.demo.common.util.JacksonUtil;
 import org.junit.Test;

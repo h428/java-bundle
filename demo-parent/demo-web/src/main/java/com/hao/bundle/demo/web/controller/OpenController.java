@@ -2,15 +2,15 @@ package com.hao.bundle.demo.web.controller;
 
 import com.google.common.collect.Lists;
 import com.hao.bundle.demo.common.component.TokenUtil;
-import com.hao.bundle.demo.common.pojo.wrapper.Page;
-import com.hao.bundle.demo.common.pojo.wrapper.Response;
+import com.hao.bundle.demo.pojo.wrapper.Page;
+import com.hao.bundle.demo.pojo.wrapper.Response;
 import com.hao.bundle.demo.common.util.EntityUtil;
 import com.hao.bundle.demo.entity.User;
 import com.hao.bundle.demo.pojo.converter.UserConverter;
 import com.hao.bundle.demo.pojo.dto.UserDto;
 import com.hao.bundle.demo.pojo.dto.UserLoginDto;
 import com.hao.bundle.demo.pojo.vo.LoginResultVo;
-import com.hao.bundle.demo.service.UserService;
+import com.hao.bundle.demo.service.impl.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -34,18 +34,16 @@ public class OpenController {
     @PostMapping("login")
     public Response<LoginResultVo> login(@RequestBody @Validated UserLoginDto userLoginDto) {
         // todo captcha check
-        User baseUser = this.userService.loginByEmail(userLoginDto);
+        UserDto user = this.userService.loginByEmail(userLoginDto);
 
-        if (baseUser == null) {
+        if (user == null) {
             return Response.badRequest_400("用户名或密码错误，登录失败");
         }
 
-        UserDto userDto = this.userConverter.entityToDto(baseUser);
-
-        String token = TokenUtil.generateTokenOfBaseUser(userDto.getId());
+        String token = TokenUtil.generateTokenOfBaseUser(user.getId());
 
         LoginResultVo loginResult = LoginResultVo.builder()
-            .user(userDto)
+            .user(user)
             .token(token)
             .build();
 

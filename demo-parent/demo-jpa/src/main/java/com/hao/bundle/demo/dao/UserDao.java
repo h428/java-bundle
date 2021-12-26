@@ -1,6 +1,6 @@
 package com.hao.bundle.demo.dao;
 
-import com.hao.bundle.demo.base.BaseDao;
+import com.hao.bundle.demo.common.base.BaseDao;
 import com.hao.bundle.demo.entity.User;
 import org.springframework.stereotype.Repository;
 

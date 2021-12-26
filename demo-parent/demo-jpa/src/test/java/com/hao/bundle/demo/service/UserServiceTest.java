@@ -7,6 +7,7 @@ import com.hao.bundle.demo.pojo.dto.UserLoginDto;
 import com.hao.bundle.demo.pojo.dto.UserRegisterDto;
 import com.hao.bundle.demo.pojo.dto.UserUpdateDto;
 import com.hao.bundle.demo.pojo.dto.UserUpdatePasswordDto;
+import com.hao.bundle.demo.service.impl.UserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

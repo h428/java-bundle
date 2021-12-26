@@ -2,7 +2,7 @@ package com.hao.bundle.demo.common.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hao.bundle.demo.common.pojo.builder.ObjectMapperBuilder;
+import com.hao.bundle.demo.common.builder.ObjectMapperBuilder;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -19,7 +19,8 @@ public class BaseConfig {
 
 
     /**
-     * 配置 Spring 的 Json 序列化格式
+     * 配置 Spring 的 Json 序列化格式；
+     * 该 Bean 理论上属于 Web 层的配置，但为了方便和 redis 的 ObjectMapper 对比，统一放到此处
      *
      * @return Jackson 的消息转换器
      */

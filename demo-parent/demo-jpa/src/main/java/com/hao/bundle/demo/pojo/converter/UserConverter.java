@@ -1,6 +1,6 @@
 package com.hao.bundle.demo.pojo.converter;
 
-import com.hao.bundle.demo.common.pojo.bo.UserBo;
+import com.hao.bundle.demo.pojo.bo.UserBo;
 import com.hao.bundle.demo.entity.User;
 import com.hao.bundle.demo.pojo.dto.UserDto;
 import com.hao.bundle.demo.pojo.dto.UserRegisterDto;

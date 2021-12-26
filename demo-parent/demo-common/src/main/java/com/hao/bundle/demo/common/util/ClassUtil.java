@@ -80,4 +80,50 @@ public class ClassUtil {
         }
     }
 
+    public static String getPrintTypeName(Class<?> clazz, boolean simpleName) {
+
+        // 处理数组类型
+        String name = clazz.getName();
+        if (name.startsWith("[")) {
+            // 去除前第一位的 [
+            name = name.substring(1);
+            // 将数组类型的元素类型替换为对应的类型，主要处理基础类型
+            String typeCh = name.charAt(0) + "";
+            name = name.replaceAll(typeCh, arrayElementTypeNameMap.get(typeCh));
+            // 去除结尾的 ;
+            name = name.replace(";", "");
+            // 添加上 [] 表示数组类型
+            name += "[]";
+        }
+
+        if (simpleName) {
+            int idx = name.lastIndexOf(".");
+            name = name.substring(idx + 1);
+        }
+
+        return name;
+    }
+
+    public static void main(String[] args) {
+
+        Class<?> clazz = String[].class;
+        System.out.println(clazz.getName());
+        System.out.println(getPrintTypeName(clazz, true));
+    }
+
+    private static final Map<String, String> arrayElementTypeNameMap = new HashMap<>();
+
+    static {
+        arrayElementTypeNameMap.put("Z", "boolean");
+        arrayElementTypeNameMap.put("B", "byte");
+        arrayElementTypeNameMap.put("C", "char");
+        arrayElementTypeNameMap.put("S", "short");
+        arrayElementTypeNameMap.put("I", "int");
+        arrayElementTypeNameMap.put("F", "float");
+        arrayElementTypeNameMap.put("J", "long");
+        arrayElementTypeNameMap.put("D", "double");
+        arrayElementTypeNameMap.put("V", "void");
+        arrayElementTypeNameMap.put("L", ""); // 类类型直接替换为空串，使用后面标记的类型
+    }
+
 }

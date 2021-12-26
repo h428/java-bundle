@@ -7,6 +7,9 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+/**
+ * 校验工具类，依赖 Hibernate Validator，可基于 java.validation 注解对 pojo 做校验
+ */
 public class ValidationUtil {
 
     // 为了通用性，这里自己初始化校验器而不进行注入，这样子类可以不依赖 Spring 环境，对于 boot-ssm 直接注入也是可以的
@@ -25,7 +28,7 @@ public class ValidationUtil {
         // 基于 Add 分组校验实体，如果存在错误直接抛出 ExcelParseException 异常
         Set<ConstraintViolation<T>> constraintViolationSet = validator.validate(entity, groups);
         if (constraintViolationSet != null && !constraintViolationSet.isEmpty()) {
-            // 抛出全局通用异常
+            // 短路：抛出全局通用异常
             for (ConstraintViolation<T> constraintViolation : constraintViolationSet) {
                 throw new BaseException(constraintViolation.getMessage());
             }
