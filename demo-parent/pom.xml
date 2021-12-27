@@ -35,6 +35,7 @@
     <jjwt.version>0.11.2</jjwt.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <lombok.version>1.18.16</lombok.version>
+    <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
   </properties>
 
   <dependencyManagement>
@@ -98,7 +99,16 @@
         <scope>provided</scope>
         <version>${lombok.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-boot-starter</artifactId>
+        <version>${mybatis-plus.version}</version>
+      </dependency>
+
     </dependencies>
+
+
 
   </dependencyManagement>
 

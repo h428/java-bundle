@@ -1,12 +1,9 @@
 package com.hao.bundle.demo.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,43 +23,36 @@ import org.hibernate.annotations.GenericGenerator;
 @Builder
 @ToString
 @Entity
-@Table
 @DynamicInsert
 @DynamicUpdate
-public class User {
+public class Product {
 
     @Id
     @GenericGenerator(name = "snowflakeIdGenerator", strategy = "com.hao.bundle.demo.common.component.SnowflakeIdGenerator")
     @GeneratedValue(generator = "snowflakeIdGenerator")
     private Long id;
 
-    private String email;
+    private String name;
 
-    private String userName;
+    private Float price;
 
-    private String userPass;
+    private String description;
 
-    private String salt;
+    private String detail;
 
-    private Double height;
+    private String images;
 
-    private String avatar;
-
-    private Integer score;
-
-    private LocalDate birthday;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
-
-    private Date lastLoginTime;
+    private String note;
 
     private Integer status;
 
-    private Long roleId;
+    private Long cid1;
+
+    private Long cid2;
 
     private Boolean deleted;
 
-    private Date deleteTime;
+    // 支持自动驼峰和下划线的映射
+    private LocalDateTime deleteTime;
+
 }

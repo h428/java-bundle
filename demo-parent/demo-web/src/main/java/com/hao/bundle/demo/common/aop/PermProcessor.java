@@ -2,9 +2,9 @@ package com.hao.bundle.demo.common.aop;
 
 import com.hao.bundle.demo.cache.PermCache;
 import com.hao.bundle.demo.common.aop.anno.Perm;
+import com.hao.bundle.demo.common.exception.NoPermissionException;
 import com.hao.bundle.demo.common.threadlocal.UserIdThreadLocal;
 import java.lang.reflect.Method;
-import javax.naming.NoPermissionException;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Aspect
 @Component
-public class ControllerAspect {
+public class PermProcessor {
 
 
     /**

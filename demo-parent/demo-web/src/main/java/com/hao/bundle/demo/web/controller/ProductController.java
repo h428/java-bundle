@@ -1,10 +1,9 @@
 package com.hao.bundle.demo.web.controller;
 
 import com.hao.bundle.demo.common.aop.anno.Perm;
-import com.hao.bundle.demo.common.threadlocal.UserIdThreadLocal;
 import com.hao.bundle.demo.pojo.constant.PermTag;
-import com.hao.bundle.demo.pojo.dto.UserDto;
-import com.hao.bundle.demo.service.IUserService;
+import com.hao.bundle.demo.pojo.dto.ProductDto;
+import com.hao.bundle.demo.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,22 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("user")
-public class UserController {
+@RequestMapping("product")
+public class ProductController {
 
     @Autowired
-    private IUserService userService;
-
-    @GetMapping("current")
-    public UserDto current() {
-        Long id = UserIdThreadLocal.get();
-        return userService.get(id);
-    }
+    private IProductService productService;
 
     @GetMapping("{id}")
-    @Perm(PermTag.USER)
-    public UserDto get(@PathVariable Long id) {
-        return userService.get(id);
+    @Perm(PermTag.PRODUCT)
+    public ProductDto get(@PathVariable Long id) {
+        return this.productService.get(id);
     }
 
 }

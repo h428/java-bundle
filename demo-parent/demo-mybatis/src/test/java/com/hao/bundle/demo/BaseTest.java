@@ -6,7 +6,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = DemoWebApplication.class)
+@SpringBootTest(classes = DemoMybatisPlusApplication.class)
 @Transactional
 public class BaseTest {
 
