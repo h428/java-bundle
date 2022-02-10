@@ -1,7 +1,9 @@
 package com.hao.bundle.demo.common.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ClassUtil {
@@ -57,13 +59,19 @@ public class ClassUtil {
         }
     }
 
+    /**
+     * 将实体转化为对应的 Map，注意使用的是 getDeclaredFields 因此继承的属性不会被转化；
+     * 同时 static 属性也不会被转化；
+     * @param entity 实体
+     * @return 转化后的 Map
+     */
     public static Map<String, Object> objectToMap(Object entity) {
 
         if (entity == null) {
             return null;
         }
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
 
         try {
             Class<?> clazz = entity.getClass();
@@ -71,7 +79,23 @@ public class ClassUtil {
 
             for (Field field : declaredFields) {
                 field.setAccessible(true);
-                map.put(field.getName(), field.get(entity));
+
+                int modifiers = field.getModifiers();
+
+                // 筛掉 static 属性
+                if (Modifier.isStatic(modifiers)) {
+                    continue;
+                }
+
+                // 筛掉 final 属性
+//                if (Modifier.isFinal(modifiers)) {
+//                    continue;
+//                }
+
+                // 筛掉 jvm 生成的辅助属性
+                if (!field.isSynthetic()) {
+                    map.put(field.getName(), field.get(entity));
+                }
             }
 
             return map;
