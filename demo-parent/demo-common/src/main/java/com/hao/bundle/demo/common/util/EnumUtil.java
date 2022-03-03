@@ -25,8 +25,10 @@ public class EnumUtil {
 
             List<Map<String, Object>> res = new ArrayList<>(); // 保存结果
 
+            int ordinal = 0;
             for (T enumInstance : enumArray) {
                 Map<String, Object> map = BeanUtil.beanToMap(enumInstance);
+                map.put("ordinal", ordinal++);
                 res.add(map);
             }
 
@@ -35,4 +37,5 @@ public class EnumUtil {
             throw new RuntimeException(e);
         }
     }
+
 }
