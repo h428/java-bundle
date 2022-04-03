@@ -2,7 +2,7 @@ package com.hao.bundle.demo.web.controller;
 
 import com.google.common.collect.Lists;
 import com.hao.bundle.demo.common.component.TokenUtil;
-import com.hao.bundle.demo.pojo.wrapper.Page;
+import com.hao.bundle.demo.pojo.wrapper.PageBean;
 import com.hao.bundle.demo.pojo.wrapper.Response;
 import com.hao.bundle.demo.common.util.EntityUtil;
 import com.hao.bundle.demo.entity.User;
@@ -63,7 +63,7 @@ public class OpenController {
     }
 
     @GetMapping("testPage")
-    public Response<Page<User>> testPage() {
+    public Response<PageBean<User>> testPage() {
 
         List<User> baseUsers = Lists.newArrayList();
         for (int i = 0; i < 5; i++) {
@@ -71,9 +71,9 @@ public class OpenController {
             baseUsers.add(t);
         }
 
-        Page<User> pageBean = Page.<User>builder().list(baseUsers).build();
+        PageBean<User> pageBeanBean = PageBean.<User>builder().list(baseUsers).build();
 
-        return Response.ok_200(pageBean);
+        return Response.ok_200(pageBeanBean);
     }
 
 

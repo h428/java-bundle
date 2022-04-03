@@ -1,5 +1,7 @@
 package com.hao.bundle.demo.service.impl;
 
+import static org.junit.Assert.*;
+
 import com.hao.bundle.demo.BaseTest;
 import com.hao.bundle.demo.pojo.dto.ProductDto;
 import com.hao.bundle.demo.pojo.query.PageQuery;
@@ -16,7 +18,6 @@ public class ProductServiceTest extends BaseTest {
 
     @Test
     public void page() {
-
         ProductQuery productQuery = ProductQuery.builder()
             .name("火")
             .build();
@@ -24,6 +25,5 @@ public class ProductServiceTest extends BaseTest {
         PageBean<ProductDto> pageBean = this.productService.page(productQuery, PageQuery.builder().build());
 
         System.out.println(pageBean);
-
     }
 }

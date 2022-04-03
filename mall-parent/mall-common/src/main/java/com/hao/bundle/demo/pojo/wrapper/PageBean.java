@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @Builder
 @ToString
 @ApiModel("分页结果")
-public class Page<T> implements Serializable {
+public class PageBean<T> implements Serializable {
 
     @ApiModelProperty("记录总条数")
     private long total;

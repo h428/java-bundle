@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.hao.bundle.demo.common.builder.ObjectMapperBuilder;
 import com.hao.bundle.demo.pojo.dto.Foo;
-import com.hao.bundle.demo.pojo.wrapper.Page;
+import com.hao.bundle.demo.pojo.wrapper.PageBean;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -52,14 +52,14 @@ public class JacksonUtil {
         }
     }
 
-    public static <T> Page<T> fromJsonToPage(String json, Class<T> entityClass) {
+    public static <T> PageBean<T> fromJsonToPage(String json, Class<T> entityClass) {
         if (json == null) {
             return null;
         }
 
         try {
             JavaType javaType = objectMapper.getTypeFactory()
-                    .constructParametricType(Page.class, entityClass);
+                    .constructParametricType(PageBean.class, entityClass);
             return objectMapper.readValue(json, javaType);
         } catch (Exception e) {
             log.error("从 json 反序列化为 pageBean 时发生异常 :", e);

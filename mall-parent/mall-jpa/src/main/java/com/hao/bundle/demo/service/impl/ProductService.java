@@ -9,14 +9,11 @@ import com.hao.bundle.demo.pojo.converter.ProductConverter;
 import com.hao.bundle.demo.pojo.dto.ProductDto;
 import com.hao.bundle.demo.pojo.query.PageQuery;
 import com.hao.bundle.demo.pojo.query.ProductQuery;
-import com.hao.bundle.demo.pojo.wrapper.Page;
+import com.hao.bundle.demo.pojo.wrapper.PageBean;
 import com.hao.bundle.demo.service.IProductService;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,11 +37,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductDto> page(ProductQuery productQuery, PageQuery pageQuery) {
+    public PageBean<ProductDto> page(ProductQuery productQuery, PageQuery pageQuery) {
         return this.pageBySpecification(productQuery, pageQuery);
     }
 
-    private Page<ProductDto> pageBySpecification(ProductQuery productQuery, PageQuery pageQuery) {
+    private PageBean<ProductDto> pageBySpecification(ProductQuery productQuery, PageQuery pageQuery) {
 
         PageRequest pageRequest = PageRequest.of(pageQuery.getPage(), pageQuery.getSize());
 
