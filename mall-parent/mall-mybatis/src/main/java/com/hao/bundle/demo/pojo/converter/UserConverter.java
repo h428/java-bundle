@@ -6,9 +6,12 @@ import com.hao.bundle.demo.pojo.dto.UserDto;
 import com.hao.bundle.demo.pojo.dto.UserRegisterDto;
 import com.hao.bundle.demo.pojo.dto.UserUpdatePasswordDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface UserConverter {
+
+    UserConverter INSTANCE = Mappers.getMapper(UserConverter.class);
 
     User dtoToEntity(UserRegisterDto baseUserRegisterDto);
 

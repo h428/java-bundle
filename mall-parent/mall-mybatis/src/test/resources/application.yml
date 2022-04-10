@@ -13,4 +13,6 @@ domain: http://localhost
 lab:
   worker-id: 1
   data-center-id: 1
-
+logging:
+  level:
+    com.hao: debug

@@ -1,9 +1,9 @@
 package com.hao.bundle.demo.service.impl;
 
+import com.hao.bundle.demo.dao.PermDao;
+import com.hao.bundle.demo.dao.RoleDao;
 import com.hao.bundle.demo.entity.Perm;
 import com.hao.bundle.demo.entity.Role;
-import com.hao.bundle.demo.mapper.PermMapper;
-import com.hao.bundle.demo.mapper.RoleMapper;
 import com.hao.bundle.demo.pojo.converter.PermConverter;
 import com.hao.bundle.demo.pojo.converter.RoleConverter;
 import com.hao.bundle.demo.pojo.dto.PermDto;
@@ -16,26 +16,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class RoleService implements IRoleService {
+public class RoleServiceJpa implements IRoleService {
 
     @Autowired
-    private RoleMapper roleMapper;
+    private RoleDao roleDao;
 
     @Autowired
-    private PermMapper permMapper;
+    private PermDao permDao;
 
-    @Autowired
-    private RoleConverter roleConverter;
+    private final RoleConverter roleConverter = RoleConverter.INSTANCE;
 
-    @Autowired
-    private PermConverter permConverter;
+    private final PermConverter permConverter = PermConverter.INSTANCE;
 
     @Override
     public RoleDto get(Long id) {
-        Role role = this.roleMapper.selectById(id);
+        Role role = this.roleDao.getOne(id);
 
         // 进一步查询角色对应的权限
-        List<Perm> permList = this.permMapper.findByRoleId(id);
+        List<Perm> permList = this.permDao.findByRoleId(id);
         List<PermDto> permDtoList = this.permConverter.entityToDto(permList);
 
         RoleDto roleDto = this.roleConverter.entityToDto(role);

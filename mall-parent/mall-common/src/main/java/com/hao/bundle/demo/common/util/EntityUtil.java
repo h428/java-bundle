@@ -125,7 +125,7 @@ public class EntityUtil {
      */
     public static <T> T generateRandomOne(Class<T> clazz, int num) {
         try {
-            T obj = clazz.newInstance();
+            T obj = clazz.getConstructor().newInstance();
 
             Field[] declaredFields = clazz.getDeclaredFields();
 

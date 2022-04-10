@@ -9,6 +9,7 @@ import com.hao.bundle.demo.pojo.converter.ProductConverter;
 import com.hao.bundle.demo.pojo.dto.ProductDto;
 import com.hao.bundle.demo.pojo.query.PageQuery;
 import com.hao.bundle.demo.pojo.query.ProductQuery;
+import com.hao.bundle.demo.pojo.query.SortQuery;
 import com.hao.bundle.demo.pojo.wrapper.PageBean;
 import com.hao.bundle.demo.service.IProductService;
 import java.util.ArrayList;
@@ -16,19 +17,19 @@ import java.util.List;
 import javax.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class ProductService implements IProductService {
+public class ProductServiceJpa implements IProductService {
 
     @Autowired
     private ProductDao productDao;
 
-    @Autowired
-    private ProductConverter productConverter;
+    private final ProductConverter productConverter = ProductConverter.INSTANCE;
 
     @Override
     public ProductDto get(Long id) {
@@ -37,13 +38,22 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public PageBean<ProductDto> page(ProductQuery productQuery, PageQuery pageQuery) {
-        return this.pageBySpecification(productQuery, pageQuery);
+    public PageBean<ProductDto> page(ProductQuery productQuery, PageQuery pageQuery, SortQuery sortQuery) {
+        return this.pageBySpecification(productQuery, pageQuery, sortQuery);
     }
 
-    private PageBean<ProductDto> pageBySpecification(ProductQuery productQuery, PageQuery pageQuery) {
+    /**
+     * 基于 Hibernate 提供的 Specification 做复杂查询
+     * @param productQuery 产品查询参数
+     * @param pageQuery 分页参数
+     * @param sortQuery 排序参数
+     * @return
+     */
+    private PageBean<ProductDto> pageBySpecification(ProductQuery productQuery, PageQuery pageQuery, SortQuery sortQuery) {
 
-        PageRequest pageRequest = PageRequest.of(pageQuery.getPage(), pageQuery.getSize());
+        Sort sort = JpaUtil.sortConvert(sortQuery);
+
+        PageRequest pageRequest = PageRequest.of(pageQuery.getPage(), pageQuery.getSize(), sort);
 
         Specification<Product> specification = (root, query, cb) -> {
 

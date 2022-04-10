@@ -8,7 +8,7 @@ import com.hao.bundle.demo.service.IRoleService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class RoleServiceTest extends BaseTest {
+public class RoleServiceJpaTest extends BaseTest {
 
     @Autowired
     private IRoleService roleService;

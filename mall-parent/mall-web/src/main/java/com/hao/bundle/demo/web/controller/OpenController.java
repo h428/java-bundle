@@ -10,7 +10,7 @@ import com.hao.bundle.demo.pojo.converter.UserConverter;
 import com.hao.bundle.demo.pojo.dto.UserDto;
 import com.hao.bundle.demo.pojo.dto.UserLoginDto;
 import com.hao.bundle.demo.pojo.vo.LoginResultVo;
-import com.hao.bundle.demo.service.impl.UserService;
+import com.hao.bundle.demo.service.impl.UserServiceMp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OpenController {
 
     @Autowired
-    private UserService userService;
+    private UserServiceMp userServiceMp;
 
     @Autowired
     private UserConverter userConverter;
@@ -34,7 +34,7 @@ public class OpenController {
     @PostMapping("login")
     public Response<LoginResultVo> login(@RequestBody @Validated UserLoginDto userLoginDto) {
         // todo captcha check
-        UserDto user = this.userService.loginByEmail(userLoginDto);
+        UserDto user = this.userServiceMp.loginByEmail(userLoginDto);
 
         if (user == null) {
             return Response.badRequest_400("用户名或密码错误，登录失败");

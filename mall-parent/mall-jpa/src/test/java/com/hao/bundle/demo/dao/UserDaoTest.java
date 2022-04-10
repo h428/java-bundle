@@ -1,10 +1,9 @@
 package com.hao.bundle.demo.dao;
 
+import static org.junit.Assert.*;
 import com.hao.bundle.demo.BaseTest;
-import com.hao.bundle.demo.entity.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 
 public class UserDaoTest extends BaseTest {
 
@@ -15,13 +14,17 @@ public class UserDaoTest extends BaseTest {
     @Autowired
     private UserDao userDao;
 
-    @Test
-    public void test() {
-        System.out.println(this.userDao.findById(1L).isPresent());
-        System.out.println(this.userDao.findById(111L).isPresent());
-        System.out.println(this.userDao.findOne(Example.of(User.builder().id(1L).build())));
-        System.out.println(this.userDao.findOne(Example.of(User.builder().id(111L).build())));
 
+    @Test
+    public void getByEmail() {
+        assertEquals("cat", this.userDao.getByEmail("cat@hao.com").getUserName());
+        assertEquals("dog", this.userDao.getByEmail("dog@hao.com").getUserName());
+        assertNull(this.userDao.getByEmail("dog222@hao.com"));
     }
 
+    @Test
+    public void getByUserName() {
+        assertEquals("cat", this.userDao.getByUserName("cat").getUserName());
+        assertNull(this.userDao.getByUserName("cat222"));
+    }
 }

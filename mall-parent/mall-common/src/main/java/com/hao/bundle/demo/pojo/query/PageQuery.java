@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 public class PageQuery {
 
     @Builder.Default
-    private Integer page = 0;
+    private Integer page = 1;
 
     @Builder.Default
     private Integer size = 10;

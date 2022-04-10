@@ -4,12 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hao.bundle.demo.common.exception.ParamErrorException;
-import com.hao.bundle.demo.entity.User;
-import com.hao.bundle.demo.mapper.UserMapper;
 import com.hao.bundle.demo.pojo.bo.UserBo;
+import com.hao.bundle.demo.dao.UserDao;
+import com.hao.bundle.demo.entity.User;
 import com.hao.bundle.demo.pojo.converter.UserConverter;
 import com.hao.bundle.demo.pojo.dto.UserDto;
 import com.hao.bundle.demo.pojo.dto.UserLoginDto;
@@ -24,13 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class UserService implements IUserService {
+public class UserServiceJpa implements IUserService {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserDao userDao;
 
-    @Autowired
-    private UserConverter userConverter;
+    private final UserConverter userConverter = UserConverter.INSTANCE;
 
     @Override
     public void register(UserRegisterDto userRegisterDto) {
@@ -49,7 +46,7 @@ public class UserService implements IUserService {
         LocalDateTime now = LocalDateTime.now();
         user.setCreateTime(now);
 
-        this.userMapper.insert(user);
+        this.userDao.save(user);
     }
 
 
@@ -61,9 +58,7 @@ public class UserService implements IUserService {
         Assert.notEmpty(email);
 
         // 根据邮箱查询对象
-        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery()
-            .eq(User::getEmail, email);
-        User userByEmail = this.userMapper.selectOne(wrapper);
+        User userByEmail = this.userDao.getByEmail(email);
 
         // 若邮箱未注册，直接返回 null 表示登录失败
         if (userByEmail == null) {
@@ -87,7 +82,7 @@ public class UserService implements IUserService {
         Long id = userUpdateDto.getId();
         Assert.notNull(id);
 
-        User user = this.userMapper.selectById(id);
+        User user = this.userDao.getOne(id);
         Assert.notNull(user);
 
 
@@ -95,9 +90,7 @@ public class UserService implements IUserService {
 
         if (StrUtil.isNotEmpty(userName) && !userName.equals(user.getUserName())) {
             // 确认用户名不被占用
-            LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery()
-                .eq(User::getUserName, userName);
-            User byUserName = userMapper.selectOne(wrapper);
+            User byUserName = userDao.getByUserName(userName);
             if (byUserName != null) {
                 throw new ParamErrorException("用户名已被占用");
             }
@@ -123,7 +116,7 @@ public class UserService implements IUserService {
         passwordDto.checkPasswordBusinessValid();
 
         // 查询用户并验证旧密码
-        User baseUser = this.userMapper.selectById(passwordDto.getId());
+        User baseUser = this.userDao.getOne(passwordDto.getId());
         UserBo userBoForPasswordCheck = this.userConverter.entityToBo(baseUser);
 
         if (!userBoForPasswordCheck.passwordValid(passwordDto.getOldPass())) {
@@ -150,7 +143,7 @@ public class UserService implements IUserService {
         // 校验密码符合业务条件
         passwordDto.checkPasswordBusinessValid();
 
-        User user = this.userMapper.selectById(passwordDto.getId());
+        User user = this.userDao.getOne(passwordDto.getId());
 
         // 使用 Bo 生成新密码
         UserBo baseUserBoForUpdatePassword = this.userConverter.updatePasswordDtoToBo(passwordDto);
@@ -164,7 +157,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserDto get(Long id) {
-        User one = this.userMapper.selectById(id);
+        User one = this.userDao.getOne(id);
         return this.userConverter.entityToDto(one);
     }
 

@@ -7,15 +7,15 @@ import com.hao.bundle.demo.pojo.dto.UserLoginDto;
 import com.hao.bundle.demo.pojo.dto.UserRegisterDto;
 import com.hao.bundle.demo.pojo.dto.UserUpdateDto;
 import com.hao.bundle.demo.pojo.dto.UserUpdatePasswordDto;
-import com.hao.bundle.demo.service.impl.UserService;
+import com.hao.bundle.demo.service.impl.UserServiceJpa;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class UserServiceTest extends BaseTest {
+public class UserServiceJpaTest extends BaseTest {
 
     @Autowired
-    private UserService userService;
+    private UserServiceJpa userServiceJpa;
 
     @Autowired
     private UserDao userDao;
@@ -32,7 +32,7 @@ public class UserServiceTest extends BaseTest {
             .userPass("aa123456")
             .confirmPass("aa123456")
             .build();
-        userService.register(registerDTO);
+        userServiceJpa.register(registerDTO);
 
         Assert.assertNotNull(userDao.getByEmail(email));
     }
@@ -45,7 +45,7 @@ public class UserServiceTest extends BaseTest {
             .email("Lyinghao@126.com")
             .userPass("aa123456")
             .build();
-        Assert.assertNull(userService.loginByEmail(userLoginDto));
+        Assert.assertNull(userServiceJpa.loginByEmail(userLoginDto));
 
         // 存在的用户登录
         UserLoginDto cat = UserLoginDto.builder()
@@ -53,7 +53,7 @@ public class UserServiceTest extends BaseTest {
             .userPass("cat")
             .build();
 
-        Assert.assertNotNull(userService.loginByEmail(cat));
+        Assert.assertNotNull(userServiceJpa.loginByEmail(cat));
 
     }
 
@@ -64,7 +64,7 @@ public class UserServiceTest extends BaseTest {
             .userName("ttt")
             .avatar("https://123.com")
             .build();
-        userService.update(updateDto);
+        userServiceJpa.update(updateDto);
 
     }
 
@@ -78,14 +78,14 @@ public class UserServiceTest extends BaseTest {
             .confirmPass(password)
             .build();
 
-        this.userService.updatePassword(passwordDto);
+        this.userServiceJpa.updatePassword(passwordDto);
 
         UserLoginDto loginDto = UserLoginDto.builder()
             .email("cat@hao.com")
             .userPass(password)
             .build();
 
-        Assert.assertNotNull(this.userService.loginByEmail(loginDto));
+        Assert.assertNotNull(this.userServiceJpa.loginByEmail(loginDto));
 
     }
 
@@ -98,13 +98,13 @@ public class UserServiceTest extends BaseTest {
             .confirmPass(password)
             .build();
 
-        this.userService.resetPassword(passwordDto);
+        this.userServiceJpa.resetPassword(passwordDto);
 
         UserLoginDto loginDto = UserLoginDto.builder()
             .email("cat@hao.com")
             .userPass(password)
             .build();
 
-        Assert.assertNotNull(this.userService.loginByEmail(loginDto));
+        Assert.assertNotNull(this.userServiceJpa.loginByEmail(loginDto));
     }
 }

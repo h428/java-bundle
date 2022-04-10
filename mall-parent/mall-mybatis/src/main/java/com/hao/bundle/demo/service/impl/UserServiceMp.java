@@ -4,10 +4,14 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hao.bundle.demo.common.exception.ParamErrorException;
-import com.hao.bundle.demo.pojo.bo.UserBo;
-import com.hao.bundle.demo.dao.UserDao;
 import com.hao.bundle.demo.entity.User;
+import com.hao.bundle.demo.mapper.UserMapper;
+import com.hao.bundle.demo.pojo.bo.UserBo;
+import com.hao.bundle.demo.pojo.converter.CategoryConverter;
 import com.hao.bundle.demo.pojo.converter.UserConverter;
 import com.hao.bundle.demo.pojo.dto.UserDto;
 import com.hao.bundle.demo.pojo.dto.UserLoginDto;
@@ -22,13 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class UserService implements IUserService {
+public class UserServiceMp extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
-    private UserDao userDao;
+    private UserMapper userMapper;
 
-    @Autowired
-    private UserConverter userConverter;
+    private final UserConverter userConverter = UserConverter.INSTANCE;
 
     @Override
     public void register(UserRegisterDto userRegisterDto) {
@@ -47,7 +50,7 @@ public class UserService implements IUserService {
         LocalDateTime now = LocalDateTime.now();
         user.setCreateTime(now);
 
-        this.userDao.save(user);
+        this.userMapper.insert(user);
     }
 
 
@@ -59,7 +62,9 @@ public class UserService implements IUserService {
         Assert.notEmpty(email);
 
         // 根据邮箱查询对象
-        User userByEmail = this.userDao.getByEmail(email);
+        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery()
+            .eq(User::getEmail, email);
+        User userByEmail = this.userMapper.selectOne(wrapper);
 
         // 若邮箱未注册，直接返回 null 表示登录失败
         if (userByEmail == null) {
@@ -83,7 +88,7 @@ public class UserService implements IUserService {
         Long id = userUpdateDto.getId();
         Assert.notNull(id);
 
-        User user = this.userDao.getOne(id);
+        User user = this.userMapper.selectById(id);
         Assert.notNull(user);
 
 
@@ -91,7 +96,9 @@ public class UserService implements IUserService {
 
         if (StrUtil.isNotEmpty(userName) && !userName.equals(user.getUserName())) {
             // 确认用户名不被占用
-            User byUserName = userDao.getByUserName(userName);
+            LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery()
+                .eq(User::getUserName, userName);
+            User byUserName = userMapper.selectOne(wrapper);
             if (byUserName != null) {
                 throw new ParamErrorException("用户名已被占用");
             }
@@ -117,7 +124,7 @@ public class UserService implements IUserService {
         passwordDto.checkPasswordBusinessValid();
 
         // 查询用户并验证旧密码
-        User baseUser = this.userDao.getOne(passwordDto.getId());
+        User baseUser = this.userMapper.selectById(passwordDto.getId());
         UserBo userBoForPasswordCheck = this.userConverter.entityToBo(baseUser);
 
         if (!userBoForPasswordCheck.passwordValid(passwordDto.getOldPass())) {
@@ -132,6 +139,8 @@ public class UserService implements IUserService {
         baseUser.setUserPass(userBoForUpdatePassword.getUserPass());
         baseUser.setSalt(userBoForUpdatePassword.getSalt());
         baseUser.setUpdateTime(LocalDateTime.now());
+        // 更新密码
+        this.updateById(baseUser);
     }
 
     @Override
@@ -144,7 +153,7 @@ public class UserService implements IUserService {
         // 校验密码符合业务条件
         passwordDto.checkPasswordBusinessValid();
 
-        User user = this.userDao.getOne(passwordDto.getId());
+        User user = this.userMapper.selectById(passwordDto.getId());
 
         // 使用 Bo 生成新密码
         UserBo baseUserBoForUpdatePassword = this.userConverter.updatePasswordDtoToBo(passwordDto);
@@ -154,11 +163,12 @@ public class UserService implements IUserService {
         user.setUserPass(baseUserBoForUpdatePassword.getUserPass());
         user.setSalt(baseUserBoForUpdatePassword.getSalt());
         user.setUpdateTime(LocalDateTime.now());
+        this.updateById(user);
     }
 
     @Override
     public UserDto get(Long id) {
-        User one = this.userDao.getOne(id);
+        User one = this.userMapper.selectById(id);
         return this.userConverter.entityToDto(one);
     }
 
