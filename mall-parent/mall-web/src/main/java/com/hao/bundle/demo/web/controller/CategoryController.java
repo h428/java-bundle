@@ -3,6 +3,7 @@ package com.hao.bundle.demo.web.controller;
 import com.hao.bundle.demo.common.aop.anno.Perm;
 import com.hao.bundle.demo.pojo.constant.PermTag;
 import com.hao.bundle.demo.pojo.dto.CategoryDto;
+import com.hao.bundle.demo.pojo.wrapper.ResBean;
 import com.hao.bundle.demo.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +20,8 @@ public class CategoryController {
 
     @GetMapping("{id}")
     @Perm(PermTag.CATEGORY)
-    public CategoryDto get(@PathVariable Long id) {
-        return this.categoryService.get(id);
+    public ResBean<CategoryDto> get(@PathVariable Long id) {
+        return ResBean.ok_200(this.categoryService.get(id));
     }
 
 }

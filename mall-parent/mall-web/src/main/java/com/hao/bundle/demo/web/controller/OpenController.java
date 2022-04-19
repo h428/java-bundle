@@ -3,10 +3,9 @@ package com.hao.bundle.demo.web.controller;
 import com.google.common.collect.Lists;
 import com.hao.bundle.demo.common.component.TokenUtil;
 import com.hao.bundle.demo.pojo.wrapper.PageBean;
-import com.hao.bundle.demo.pojo.wrapper.Response;
+import com.hao.bundle.demo.pojo.wrapper.ResBean;
 import com.hao.bundle.demo.common.util.EntityUtil;
 import com.hao.bundle.demo.entity.User;
-import com.hao.bundle.demo.pojo.converter.UserConverter;
 import com.hao.bundle.demo.pojo.dto.UserDto;
 import com.hao.bundle.demo.pojo.dto.UserLoginDto;
 import com.hao.bundle.demo.pojo.vo.LoginResultVo;
@@ -27,17 +26,13 @@ public class OpenController {
     @Autowired
     private UserServiceMp userServiceMp;
 
-    @Autowired
-    private UserConverter userConverter;
-
-
     @PostMapping("login")
-    public Response<LoginResultVo> login(@RequestBody @Validated UserLoginDto userLoginDto) {
+    public ResBean<LoginResultVo> login(@RequestBody @Validated UserLoginDto userLoginDto) {
         // todo captcha check
         UserDto user = this.userServiceMp.loginByEmail(userLoginDto);
 
         if (user == null) {
-            return Response.badRequest_400("用户名或密码错误，登录失败");
+            return ResBean.badRequest_400("用户名或密码错误，登录失败");
         }
 
         String token = TokenUtil.generateTokenOfBaseUser(user.getId());
@@ -47,11 +42,11 @@ public class OpenController {
             .token(token)
             .build();
 
-        return Response.ok_200(loginResult);
+        return ResBean.ok_200(loginResult);
     }
 
     @GetMapping("testList")
-    public Response<List<User>> testList() {
+    public ResBean<List<User>> testList() {
 
         List<User> users = Lists.newArrayList();
         for (int i = 0; i < 5; i++) {
@@ -59,11 +54,11 @@ public class OpenController {
             users.add(t);
         }
 
-        return Response.ok_200(users);
+        return ResBean.ok_200(users);
     }
 
     @GetMapping("testPage")
-    public Response<PageBean<User>> testPage() {
+    public ResBean<PageBean<User>> testPage() {
 
         List<User> baseUsers = Lists.newArrayList();
         for (int i = 0; i < 5; i++) {
@@ -73,7 +68,7 @@ public class OpenController {
 
         PageBean<User> pageBeanBean = PageBean.<User>builder().list(baseUsers).build();
 
-        return Response.ok_200(pageBeanBean);
+        return ResBean.ok_200(pageBeanBean);
     }
 
 

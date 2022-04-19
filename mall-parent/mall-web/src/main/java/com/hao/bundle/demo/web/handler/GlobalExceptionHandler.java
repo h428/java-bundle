@@ -1,7 +1,7 @@
 package com.hao.bundle.demo.web.handler;
 
 import com.hao.bundle.demo.common.exception.BaseException;
-import com.hao.bundle.demo.pojo.wrapper.Response;
+import com.hao.bundle.demo.pojo.wrapper.ResBean;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import org.springframework.validation.BindException;
@@ -22,32 +22,32 @@ public class GlobalExceptionHandler {
     // 统一处理继承于 BaseException 的全局异常（包含了状态码）
     @ExceptionHandler(BaseException.class)
     @ResponseBody
-    public Response<?> handleBaseException(BaseException ex) {
-        return Response.build(ex.getStatus(), ex.getMessage(), null);
+    public ResBean<?> handleBaseException(BaseException ex) {
+        return ResBean.build(ex.getStatus(), ex.getMessage(), null);
     }
 
     // RequestBody 类请求校验失败产生的异常
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
-    public Response<?> handleBindException(MethodArgumentNotValidException ex) {
+    public ResBean<?> handleBindException(MethodArgumentNotValidException ex) {
         FieldError fieldError = ex.getBindingResult().getFieldError();
-        return Response.badRequest_400(fieldError.getDefaultMessage());
+        return ResBean.badRequest_400(fieldError.getDefaultMessage());
     }
 
     // 表单类请求校验失败产生的异常
     @ExceptionHandler(BindException.class)
     @ResponseBody
-    public Response<?> handleBindException(BindException ex) {
+    public ResBean<?> handleBindException(BindException ex) {
         //校验 除了 requestBody 注解方式的参数校验 对应的 bindingResult 为 BeanPropertyBindingResult
         FieldError fieldError = ex.getBindingResult().getFieldError();
-        return Response.badRequest_400(fieldError.getDefaultMessage());
+        return ResBean.badRequest_400(fieldError.getDefaultMessage());
     }
 
     // 路径参数绑定失败产生的异常
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseBody
-    public Response<?> handleBindException(ConstraintViolationException ex) {
+    public ResBean<?> handleBindException(ConstraintViolationException ex) {
         ConstraintViolation<?> constraintViolation = ex.getConstraintViolations().iterator().next();
-        return Response.badRequest_400(constraintViolation.getMessage());
+        return ResBean.badRequest_400(constraintViolation.getMessage());
     }
 }
